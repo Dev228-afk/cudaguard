@@ -43,30 +43,7 @@ CudaGuard analyzes CUDA C++ source code **before compilation** and reports compi
 ---
 
 ## 🏗️ Architecture
-
-```text
-.cu files / compile_commands.json
-        |
-        v
-CudaGuard CLI (--file, --compile-db, --wrap-nvcc)
-        |
-        v
-Clang LibTooling Front-End (ClangTool + MatchFinder)
-        |
-        v
-AST Matchers + Rule Registry (enable/disable per rule)
-        |
-        v
-CG001–CG005 Analysis Rules (ASTMatcher callbacks)
-        |
-        v
-Diagnostic Reporter
-   |              |
-Human Output     JSON Output
-        |
-        v
-Optional nvcc Wrapper + Artifact Logs (.cudaguard/artifacts/)
-```
+![Architecture](./assets/architecture.png)
 
 ---
 
