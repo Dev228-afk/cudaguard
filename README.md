@@ -43,7 +43,7 @@ CudaGuard analyzes CUDA C++ source code **before compilation** and reports compi
 ---
 
 ## 🏗️ Architecture
-![Architecture](./assets/architecure.png)
+<img src="./assets/architecure.png" alt="Architecture" height="30%" width="60%">
 
 ---
 
