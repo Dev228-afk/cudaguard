@@ -43,8 +43,61 @@ CudaGuard analyzes CUDA C++ source code **before compilation** and reports compi
 ---
 
 ## 🏗️ Architecture
-<img src="./assets/architecure.png" alt="Architecture" height="30%" width="60%">
+# CudaGuard 🛡️
 
+A high-performance, compiler-level static analysis and diagnostics tool for CUDA C++ source code, built on C++20 and Clang LibTooling.
+
+[![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
+[![LLVM/Clang](https://img.shields.io/badge/LLVM%2FClang-15%2F16%2F17-orange.svg)](https://clang.llvm.org/)
+[![CUDA C++](https://img.shields.io/badge/CUDA-C%2B%2B-green.svg)](https://developer.nvidia.com/cuda-zone)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+CudaGuard acts as a fast, pre-compilation diagnostic pass that inspects CUDA C++ source files before invoking `nvcc`. By leveraging **Clang LibTooling** and precise **Abstract Syntax Tree (AST) Matchers**, it bypasses fragile regex parsing to identify critical concurrency, memory safety, and kernel launch configuration bugs directly within your development workflow or CI/CD pipeline.
+
+---
+
+## 🚀 Key Features
+
+* **Production-Grade Semantic Analysis:** Uses Clang LibTooling to construct a true Abstract Syntax Tree (AST) of CUDA source code.
+* **Declarative AST Matchers:** Traverses deep node hierarchies with precision to spot subtle CUDA programming anti-patterns.
+* **Targeted GPU Safety Rules:** Detects 5 high-impact, hard-to-debug CUDA issues, including synchronization errors and unsafe dynamic shared memory allocation.
+* **Compiler-Style Diagnostics:** Outputs actionable warnings and error messages containing exact file, line, and column coordinates alongside clear resolution hints.
+* **Seamless Build System Integration:** Integrates out of the box with `compile_commands.json` or wraps `nvcc` directly to stop broken builds early.
+
+---
+
+## 🏗️ Architecture
+
+To see how CudaGuard integrates into your GPU compilation toolchain, see our design layout:
+
+<img src="./assets/architecure.png" alt="CudaGuard Architecture Diagram" width="70%">
+
+---
+
+## 🔍 CUDA Static Analysis Rules & Diagnostics Reference
+
+Expand any rule below to view the diagnostic logic, code examples, and compiler hints:
+
+### 🛑 CG001: Missing CUDA Error Check After Kernel Launch (Warning)
+* **Description:** Detects asynchronous CUDA kernel launches that are not followed by error checking blocks (`cudaGetLastError()`, `cudaPeekAtLastError()`, or `cudaDeviceSynchronize()`) within the trailing 5 statements.
+* **Why it matters:** Kernel launches are non-blocking. Skipping error checks leads to untraceable runtime crashes and silent failures.
+
+<details>
+<summary>💻 Code Examples & Diagnostic Output</summary>
+
+```cuda
+// ❌ Bad Code
+vectorAdd<<<blocks, threads>>>(d_a, d_b, d_c, n);
+cudaFree(d_a); // Missing error checking logic!
+return 0;
+
+//  Good Code
+vectorAdd<<<blocks, threads>>>(d_a, d_b, d_c, n);
+cudaError_t err = cudaGetLastError();
+if (err != cudaSuccess) {
+    fprintf(stderr, "Kernel launch failed: %s\n", cudaGetErrorString(err));
+    return 1;
+}
 ---
 
 ## 🔍 Interactive Diagnostics Reference
