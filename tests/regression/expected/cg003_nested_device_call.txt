@@ -1,0 +1,1 @@
+CG003: __device__ function 'innerDevice' calls function 'hostFormat' that is not marked __device__ or __host__ __device__

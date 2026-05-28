@@ -1,0 +1,2 @@
+CG002: kernel launch uses a zero grid dimension
+CG002: kernel launch uses a zero block dimension

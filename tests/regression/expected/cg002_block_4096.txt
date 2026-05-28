@@ -1,0 +1,1 @@
+CG002: kernel launch uses a suspicious block size (4096), which exceeds the maximum of 1024 threads per block

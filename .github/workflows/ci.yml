@@ -1,0 +1,79 @@
+name: CudaGuard CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        llvm-version: [15, 16, 17]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            llvm-${{ matrix.llvm-version }}-dev \
+            libclang-${{ matrix.llvm-version }}-dev \
+            clang-${{ matrix.llvm-version }} \
+            cmake \
+            ninja-build \
+            python3
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_CXX_COMPILER=clang++-${{ matrix.llvm-version }} \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Unit Tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Regression Tests
+        run: python3 scripts/run_regression_tests.py
+        env:
+          CUDAGUARD_BIN: build/cudaguard
+
+      - name: CLI Smoke Test
+        run: |
+          ./build/cudaguard --help
+          ./build/cudaguard --version
+
+  formatting:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check C++ formatting
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format-15
+          find src include -name '*.cpp' -o -name '*.h' | \
+            xargs clang-format-15 --dry-run --Werror 2>&1 || \
+            echo "::warning::Some files have formatting differences (non-blocking)"
+
+  python-lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Python tools
+        run: pip install flake8
+
+      - name: Lint Python scripts
+        run: flake8 scripts/ --max-line-length=100 --ignore=E501,W503

@@ -1,0 +1,1 @@
+CG005: cudaMemcpy direction may not match known pointer categories

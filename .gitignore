@@ -1,0 +1,37 @@
+# Build directories
+build/
+cmake-build-*/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Compiled objects
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+
+# Executables
+cudaguard
+*.exe
+
+# CudaGuard artifacts
+.cudaguard/
+
+# Claude Code settings
+.claude/
+
+# Task tracking
+task.md
+
+
+# OS files
+.DS_Store
+Thumbs.db
+

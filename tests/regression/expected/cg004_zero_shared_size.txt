@@ -1,0 +1,1 @@
+CG004: kernel 'prefixSum' uses extern __shared__ memory, but launch does not provide a dynamic shared-memory size

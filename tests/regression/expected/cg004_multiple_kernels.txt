@@ -1,0 +1,2 @@
+CG004: kernel 'reduce' uses extern __shared__ memory, but launch does not provide a dynamic shared-memory size
+CG004: kernel 'scan' uses extern __shared__ memory, but launch does not provide a dynamic shared-memory size

@@ -1,0 +1,3 @@
+CG003: __device__ function 'broken' calls function 'hostPrint' that is not marked __device__ or __host__ __device__
+CG003: __device__ function 'broken' calls function 'hostSquare' that is not marked __device__ or __host__ __device__
+CG003: __device__ function 'broken' calls function 'hostSqrt' that is not marked __device__ or __host__ __device__

@@ -1,0 +1,2 @@
+CG003: __device__ function 'brokenDeviceFunc' calls function 'hostLogger' that is not marked __device__ or __host__ __device__
+CG003: __device__ function 'brokenDeviceFunc' calls function 'hostMath' that is not marked __device__ or __host__ __device__

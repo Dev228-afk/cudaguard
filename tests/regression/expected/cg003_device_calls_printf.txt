@@ -1,0 +1,1 @@
+CG003: __device__ function 'deviceCalc' calls function 'printResult' that is not marked __device__ or __host__ __device__
